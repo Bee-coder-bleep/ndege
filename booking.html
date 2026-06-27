@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Flight | Skyward Airlines</title>
+    <meta name="description" content="Book domestic and regional flights with Skyward Airlines.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+
+    <style>
+        /* ── Passenger contact card ── */
+        .contact-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 35px rgba(0,0,0,.07);
+            padding: 40px;
+            margin-bottom: 10px;
+        }
+        .contact-card h3 {
+            font-size: 22px;
+            color: #06264d;
+            margin-bottom: 6px;
+        }
+        .contact-card p {
+            color: #666;
+            margin-bottom: 28px;
+            font-size: 15px;
+        }
+        .contact-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media(max-width:600px){ .contact-fields{ grid-template-columns:1fr; } }
+        .contact-fields input {
+            height: 55px;
+            padding: 15px 18px;
+            border: 2px solid #e8edf3;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: border .25s;
+            outline: none;
+            width: 100%;
+        }
+        .contact-fields input:focus { border-color: #ffb100; }
+
+        /* ── WhatsApp submit button ── */
+        .wa-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #25d366;
+            color: #fff;
+            padding: 16px 40px;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: .3s;
+            font-family: 'Poppins', sans-serif;
+            text-decoration: none;
+        }
+        .wa-btn:hover { background: #128c4e; transform: translateY(-2px); color:#fff; }
+        .wa-icon { font-size: 24px; }
+
+        /* ── Form field labels ── */
+        .card label {
+            display: block;
+            font-weight: 600;
+            color: #06264d;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+        .card input, .card select {
+            width: 100%;
+            height: 52px;
+            padding: 12px 16px;
+            border: 2px solid #e8edf3;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: border .25s;
+            background: #fff;
+        }
+        .card input:focus, .card select:focus { border-color: #ffb100; }
+        .airport-list {
+            border: 1px solid #e8edf3;
+            border-radius: 8px;
+            margin-top: 4px;
+            max-height: 180px;
+            overflow-y: auto;
+            background: #fff;
+            z-index: 100;
+            position: relative;
+        }
+        .airport-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background .2s;
+        }
+        .airport-item:hover { background: #fff8e7; color: #06264d; }
+
+        /* passenger counter */
+        #minusPassenger, #plusPassenger {
+            width: 36px; height: 36px;
+            border: 2px solid #06264d;
+            border-radius: 8px;
+            background: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #06264d;
+            transition: .2s;
+        }
+        #minusPassenger:hover, #plusPassenger:hover { background: #06264d; color: #fff; }
+        #passengerCount { font-size: 20px; font-weight: 700; color: #06264d; min-width: 24px; text-align: center; }
+
+        /* fare box */
+        .fare-highlight { color: #ffb100; font-size: 36px; font-weight: 800; }
+
+        /* step indicator */
+        .steps {
+            display: flex;
+            gap: 0;
+            margin-bottom: 50px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,.08);
+        }
+        .step {
+            flex: 1;
+            padding: 18px 10px;
+            text-align: center;
+            background: #e8edf3;
+            font-weight: 600;
+            font-size: 14px;
+            color: #888;
+            position: relative;
+        }
+        .step.active { background: #06264d; color: #fff; }
+        .step.done   { background: #ffb100; color: #fff; }
+        .step-num { display: block; font-size: 22px; font-weight: 800; margin-bottom: 2px; }
+
+        /* wa note */
+        .wa-note {
+            background: #f0fdf4;
+            border: 2px solid #86efac;
+            border-radius: 12px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #166534;
+            font-weight: 500;
+        }
+        .wa-note .wa-note-icon { font-size: 28px; flex-shrink: 0; }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Bar -->
+    <div class="topbar">
+        <div class="container">
+            <span>📱 Book via WhatsApp — Instant Confirmation</span>
+            <span>24/7 Customer Support</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav">
+            <a href="index.html" class="logo">SKYWARD<span>AIRLINES</span></a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="destinations.html">Destinations</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="nav-right">
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Hero -->
+    <section class="hero" style="height:45vh;background:url('assets/images/booking-banner.jpg') center/cover;">
+        <div class="overlay"></div>
+        <div class="container hero-content">
+            <div class="hero-left">
+                <p class="subtitle">WHATSAPP BOOKING</p>
+                <h1>Book Your Flight Instantly</h1>
+                <p>Fill in your flight details and we'll connect you directly with our reservations team on WhatsApp.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Form -->
+    <section class="services">
+        <div class="container">
+
+            <!-- Step indicators -->
+            <div class="steps">
+                <div class="step active" id="step1-indicator">
+                    <span class="step-num">1</span>Flight Details
+                </div>
+                <div class="step" id="step2-indicator">
+                    <span class="step-num">2</span>Your Info
+                </div>
+                <div class="step" id="step3-indicator">
+                    <span class="step-num">3</span>WhatsApp
+                </div>
+            </div>
+
+            <form id="bookingForm">
+
+                <!-- ══════════════════════════════════
+                     STEP 1 — Flight Details
+                ══════════════════════════════════ -->
+                <div id="step1">
+
+                    <div class="title" style="margin-bottom:40px;">
+                        <h2>Flight Details</h2>
+                        <p style="color:#666;">Tell us where and when you want to fly.</p>
+                    </div>
+
+                    <div class="wa-note" style="background:#fff8e7;border-color:#ffd980;color:#6b4a00;">
+                        <span class="wa-note-icon">🎉</span>
+                        <span>Flying to <strong>Summer Tides Festival</strong> (2–4 July 2026, Lost Beach Club, Malindi)? Set "To" as <strong>Malindi (MYD)</strong> and enter promo code <strong>SUMMERTIDES</strong> below for our festival fare.</span>
+                    </div>
+
+                    <!-- Row 1: Trip type / Cabin / Promo -->
+                    <div class="cards" style="margin-bottom:30px;">
+                        <div class="card">
+                            <label>Trip Type</label>
+                            <select id="tripType">
+                                <option value="One Way">One Way</option>
+                                <option value="Return">Return</option>
+                            </select>
+                        </div>
+                        <div class="card">
+                            <label>Cabin Class</label>
+                            <select id="cabin">
+                                <option value="Economy">Economy</option>
+                                <option value="Premium Economy">Premium Economy</option>
+                                <option value="Business">Business</option>
+                                <option value="First Class">First Class</option>
+                            </select>
+                        </div>
+                        <div class="card">
+                            <label>Promo Code</label>
+                            <input id="promoCode" type="text" placeholder="e.g. SUMMERTIDES">
+                        </div>
+                    </div>
+
+                    <!-- Row 2: From / To / Swap -->
+                    <div class="cards" style="margin-bottom:30px;">
+                        <div class="card">
+                            <label>From</label>
+                            <input id="fromAirport" class="airport-input" required placeholder="Departure Airport">
+                            <div class="airport-list" id="fromList"></div>
+                        </div>
+                        <div class="card">
+                            <label>To</label>
+                            <input id="toAirport" class="airport-input" required placeholder="Destination Airport">
+                            <div class="airport-list" id="toList"></div>
+                        </div>
+                        <div class="card" style="display:flex;align-items:flex-end;justify-content:center;">
+                            <button type="button" id="swapRoute" class="button">⇄ Swap Route</button>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Dates / Passengers -->
+                    <div class="cards" style="margin-bottom:30px;">
+                        <div class="card">
+                            <label>Departure Date</label>
+                            <input id="departureDate" type="date" required>
+                        </div>
+                        <div class="card" id="returnContainer">
+                            <label>Return Date</label>
+                            <input id="returnDate" type="date">
+                        </div>
+                        <div class="card">
+                            <label>Passengers</label>
+                            <div style="display:flex;gap:15px;align-items:center;margin-top:6px;">
+                                <button type="button" id="minusPassenger">−</button>
+                                <span id="passengerCount">1</span>
+                                <button type="button" id="plusPassenger">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fare estimate -->
+                    <div class="status-box" style="margin-bottom:30px;">
+                        <div>
+                            <h2>Estimated Fare</h2>
+                            <p>Starting price for your selected itinerary.</p>
+                        </div>
+                        <div>
+                            <span class="fare-highlight" id="estimatedFare">KES 5,500</span>
+                        </div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <button type="button" class="button" id="toStep2Btn" style="font-size:16px;padding:16px 50px;">
+                            Continue → Enter Your Details
+                        </button>
+                    </div>
+
+                </div><!-- /step1 -->
+
+                <!-- ══════════════════════════════════
+                     STEP 2 — Passenger Contact Info
+                ══════════════════════════════════ -->
+                <div id="step2" style="display:none;">
+
+                    <div class="title" style="margin-bottom:40px;">
+                        <h2>Your Details</h2>
+                        <p style="color:#666;">We need your name and phone number to complete the booking on WhatsApp.</p>
+                    </div>
+
+                    <div class="contact-card">
+                        <h3>👤 Passenger Information</h3>
+                        <p>Please enter your details exactly as they appear on your ID or passport.</p>
+                        <div class="contact-fields">
+                            <input id="firstName" type="text" placeholder="First Name" required>
+                            <input id="lastName"  type="text" placeholder="Last Name / Surname" required>
+                            <input id="custPhone" type="tel"  placeholder="Your Phone Number e.g. 0700 000 000" required>
+                            <input id="custEmail" type="email" placeholder="Email Address (optional)">
+                        </div>
+                    </div>
+
+                    <!-- WhatsApp note -->
+                    <div class="wa-note">
+                        <span class="wa-note-icon">💬</span>
+                        <span>Clicking <strong>Book via WhatsApp</strong> will open WhatsApp with all your booking details pre-filled. Our reservations team will confirm your flight and send payment instructions within minutes.</span>
+                    </div>
+
+                    <!-- Booking summary preview -->
+                    <div class="status-box" style="margin-bottom:30px;flex-direction:column;align-items:flex-start;gap:15px;">
+                        <h2 style="color:#fff;font-size:24px;margin-bottom:5px;">📋 Booking Summary</h2>
+                        <div id="summaryBox" style="color:rgba(255,255,255,.9);line-height:2;font-size:15px;width:100%;"></div>
+                    </div>
+
+                    <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;">
+                        <button type="button" id="backBtn" class="button" style="background:#06264d;">← Back</button>
+                        <button type="submit" class="wa-btn">
+                            <span class="wa-icon">💬</span> Book via WhatsApp
+                        </button>
+                    </div>
+
+                </div><!-- /step2 -->
+
+            </form>
+        </div>
+    </section>
+
+    <!-- Why book with us -->
+    <section class="destinations">
+        <div class="container">
+            <div class="title"><h2>Why Book Via WhatsApp?</h2></div>
+            <div class="cards">
+                <div class="card">
+                    <h3>⚡ Instant Response</h3>
+                    <p>Our reservations team replies within minutes during business hours.</p>
+                </div>
+                <div class="card">
+                    <h3>🔒 Safe & Secure</h3>
+                    <p>End-to-end encrypted conversations keep your details private.</p>
+                </div>
+                <div class="card">
+                    <h3>✅ Flexible Changes</h3>
+                    <p>Modify or cancel your booking easily by messaging us directly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-grid">
+            <div>
+                <h3>SKYWARD AIRLINES</h3>
+                <p>Safe, reliable and comfortable regional travel.</p>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="destinations.html">Destinations</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div>
+                <h4>Support</h4>
+                <a href="destinations.html">Travel Information</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+
+    <script>
+    /*========================================================
+     SKYWARD AIRLINES — WhatsApp Booking Script
+     Agent WhatsApp: +254785871084
+    =========================================================*/
+
+    const WHATSAPP_NUMBER = "254785871084";
+
+    const airports = [
+        "Nairobi — Jomo Kenyatta Intl (NBO)",
+        "Nairobi — Wilson Airport (WIL)",
+        "Mombasa — Moi Intl (MBA)",
+        "Kisumu — Kisumu Intl (KIS)",
+        "Eldoret — Eldoret Intl (EDL)",
+        "Malindi — Malindi Airport (MYD)",
+        "Ukunda — Ukunda Airstrip (UKA)",
+        "Lamu — Manda Airport (LAU)",
+        "Entebbe — Entebbe Intl (EBB)",
+        "Kigali — Kigali Intl (KGL)",
+        "Dar es Salaam — Julius Nyerere Intl (DAR)",
+        "Zanzibar — Abeid Karume Intl (ZNZ)",
+        "Addis Ababa — Bole Intl (ADD)"
+    ];
+
+    let passengers = 1;
+
+    /* ── Airport autocomplete ── */
+    function setupAutocomplete(inputId, listId) {
+        const input = document.getElementById(inputId);
+        const list  = document.getElementById(listId);
+        input.addEventListener("input", () => {
+            const val = input.value.toLowerCase();
+            list.innerHTML = "";
+            if (val.length < 1) return;
+            airports
+                .filter(a => a.toLowerCase().includes(val))
+                .forEach(a => {
+                    const item = document.createElement("div");
+                    item.className = "airport-item";
+                    item.textContent = a;
+                    item.onclick = () => { input.value = a; list.innerHTML = ""; updateFare(); };
+                    list.appendChild(item);
+                });
+        });
+        document.addEventListener("click", e => {
+            if (!input.contains(e.target)) list.innerHTML = "";
+        });
+    }
+    setupAutocomplete("fromAirport", "fromList");
+    setupAutocomplete("toAirport",   "toList");
+
+    /* ── Swap route ── */
+    document.getElementById("swapRoute").onclick = () => {
+        const f = document.getElementById("fromAirport");
+        const t = document.getElementById("toAirport");
+        [f.value, t.value] = [t.value, f.value];
+    };
+
+    /* ── Passenger counter ── */
+    document.getElementById("minusPassenger").onclick = () => {
+        if (passengers > 1) { passengers--; updatePassenger(); }
+    };
+    document.getElementById("plusPassenger").onclick  = () => {
+        if (passengers < 9) { passengers++; updatePassenger(); }
+    };
+    function updatePassenger() {
+        document.getElementById("passengerCount").textContent = passengers;
+        updateFare();
+    }
+
+    /* ── Fare calculator ── */
+    // Route fares from Skyward Express fare guide (Economy one-way base)
+    // Where fares from the guide range would match another route, we subtract 1 to keep each unique
+    const routeFares = {
+
+        // ── Nairobi Wilson (WIL) departures ──
+        "WIL|MBA": 6500,   "MBA|WIL": 6500,   // KES 6,500–9,500  → 6500
+        "WIL|EDL": 6800,   "EDL|WIL": 6800,   // KES 6,500–9,000  → 6800 (differs from WIL|MBA)
+        "WIL|LOK": 9500,   "LOK|WIL": 9500,   // KES 9,500–14,000 → 9500
+        "WIL|MYD": 7200,   "MYD|WIL": 7200,   // KES 6,500–8,500  → 7200
+        "WIL|LAU": 8800,   "LAU|WIL": 8800,   // KES 8,500–12,000 → 8800
+        "WIL|UKA": 7500,   "UKA|WIL": 7500,   // KES 7,500–11,000 → 7500
+        "WIL|GGM": 6799,   "GGM|WIL": 6799,   // KES 6,500–8,500  → 6799 (-1 vs WIL|MBA 6500? no clash; -1 vs WIL|MYD 7200? no; set 6799 to differ from WIL|MBA 6500 & WIL|EDL 6800)
+        "WIL|KTL": 7199,   "KTL|WIL": 7199,   // KES 7,000–9,000  → 7199 (differs from WIL|MYD 7200 & WIL|UKA 7500)
+
+        // ── Nairobi JKIA (NBO) departures ──
+        "NBO|MBA": 7300,   "MBA|NBO": 7300,   // KES 7,000–9,900  → 7300 (differs from WIL|MBA 6500)
+        "NBO|EDL": 7499,   "EDL|NBO": 7499,   // KES 7,000–9,500  → 7499 (differs from NBO|MBA 7300 & WIL|EDL 6800)
+        "NBO|LOK": 10200,  "LOK|NBO": 10200,  // KES 10,000–14,500→ 10200 (differs from WIL|LOK 9500)
+        "NBO|MYD": 7699,   "MYD|NBO": 7699,   // KES 7,000–9,500  → 7699 (differs from WIL|MYD 7200 & NBO|MBA 7300 & NBO|EDL 7499)
+        "NBO|LAU": 9199,   "LAU|NBO": 9199,   // KES 8,500–12,000 → 9199 (differs from WIL|LAU 8800)
+        "NBO|UKA": 7999,   "UKA|NBO": 7999,   // KES 7,500–11,000 → 7999 (differs from WIL|UKA 7500)
+
+        // ── Inter-regional & Coastal ──
+        "EDL|LOK": 7500,   "LOK|EDL": 7500,   // KES 7,500–10,500 → 7500 (differs from WIL|UKA 7500? same — subtract 1)
+        // ^ clash with WIL|UKA 7500 — adjust:
+        // override below via spread — handled by ordering (last key wins), so set inline:
+
+        "MBA|LAU": 7100,   "LAU|MBA": 7100,   // KES 6,000–8,500  → 7100 (differs from WIL|GGM 6799 & WIL|MBA 6500)
+        "MYD|LAU": 6499,   "LAU|MYD": 6499,   // KES 5,500–7,500  → 6499 (differs from WIL|MBA 6500 by 1)
+
+        // ── International ──
+        "NBO|ZNZ": 11500,  "ZNZ|NBO": 11500,
+        "WIL|ZNZ": 11499,  "ZNZ|WIL": 11499,  // -1 vs NBO|ZNZ
+        "NBO|KGL": 12500,  "KGL|NBO": 12500,
+        "WIL|KGL": 12499,  "KGL|WIL": 12499,  // -1 vs NBO|KGL
+        "NBO|DAR": 13500,  "DAR|NBO": 13500,
+        "NBO|EBB": 12200,  "EBB|NBO": 12200,
+        "NBO|ADD": 15000,  "ADD|NBO": 15000,
+
+        // ── Kisumu ──
+        "WIL|KIS": 7198,   "KIS|WIL": 7198,   // differs from WIL|KTL 7199 by 1
+        "NBO|KIS": 7698,   "KIS|NBO": 7698,   // differs from NBO|MYD 7699 by 1
+    };
+
+    // Fix EDL|LOK clash with WIL|UKA (both would be 7500) — use 7501
+    routeFares["EDL|LOK"] = 7501;
+    routeFares["LOK|EDL"] = 7501;
+
+    // Cabin multipliers on top of Economy base
+    const cabinMult = { "Economy": 1, "Premium Economy": 1.35, "Business": 1.85, "First Class": 2.5 };
+
+    function extractCode(str) {
+        const m = str.match(/\(([A-Z]{2,3})\)/);
+        return m ? m[1] : "";
+    }
+
+    function getRouteFare() {
+        const fromCode = extractCode(document.getElementById("fromAirport").value);
+        const toCode   = extractCode(document.getElementById("toAirport").value);
+        const key = fromCode + "|" + toCode;
+        return routeFares[key] || 7500; // fallback
+    }
+
+    function updateFare() {
+        const cabin = document.getElementById("cabin").value;
+        const base  = getRouteFare();
+        const mult  = cabinMult[cabin] || 1;
+        const total = Math.round(base * mult) * passengers;
+        document.getElementById("estimatedFare").textContent =
+            "KES " + total.toLocaleString();
+    }
+
+    // Re-calculate whenever route changes too
+    document.getElementById("fromAirport").addEventListener("input", updateFare);
+    document.getElementById("toAirport").addEventListener("input",   updateFare);
+    document.getElementById("cabin").addEventListener("change", updateFare);
+    updateFare();
+
+    /* ── Return date toggle ── */
+    document.getElementById("tripType").addEventListener("change", function() {
+        document.getElementById("returnContainer").style.display =
+            this.value === "Return" ? "block" : "none";
+    });
+    document.getElementById("returnContainer").style.display = "none";
+
+    /* ── Date minimum = today ── */
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("departureDate").min = today;
+    document.getElementById("returnDate").min    = today;
+
+    /* ── Step 1 → Step 2 ── */
+    document.getElementById("toStep2Btn").onclick = () => {
+        const from = document.getElementById("fromAirport").value.trim();
+        const to   = document.getElementById("toAirport").value.trim();
+        const dep  = document.getElementById("departureDate").value;
+
+        if (!from)  { alert("Please enter your departure airport."); return; }
+        if (!to)    { alert("Please enter your destination airport."); return; }
+        if (!dep)   { alert("Please select a departure date."); return; }
+
+        // Update summary preview
+        buildSummary();
+
+        // Show step 2
+        document.getElementById("step1").style.display = "none";
+        document.getElementById("step2").style.display = "block";
+        document.getElementById("step1-indicator").classList.replace("active","done");
+        document.getElementById("step2-indicator").classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    /* ── Back to step 1 ── */
+    document.getElementById("backBtn").onclick = () => {
+        document.getElementById("step2").style.display = "none";
+        document.getElementById("step1").style.display = "block";
+        document.getElementById("step2-indicator").classList.remove("active");
+        document.getElementById("step1-indicator").classList.replace("done","active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    /* ── Build summary text ── */
+    function buildSummary() {
+        const tripType  = document.getElementById("tripType").value;
+        const cabin     = document.getElementById("cabin").value;
+        const from      = document.getElementById("fromAirport").value.trim();
+        const to        = document.getElementById("toAirport").value.trim();
+        const dep       = document.getElementById("departureDate").value;
+        const ret       = document.getElementById("returnDate").value;
+        const promo     = document.getElementById("promoCode").value.trim();
+        const fare      = document.getElementById("estimatedFare").textContent;
+
+        let html = `
+            <strong>✈ Route:</strong> ${from} → ${to}<br>
+            <strong>📅 Departure:</strong> ${formatDate(dep)}<br>
+            ${tripType === "Return" && ret ? `<strong>🔄 Return:</strong> ${formatDate(ret)}<br>` : ""}
+            <strong>🎫 Trip Type:</strong> ${tripType}<br>
+            <strong>💺 Class:</strong> ${cabin}<br>
+            <strong>👥 Passengers:</strong> ${passengers}<br>
+            <strong>💰 Est. Fare:</strong> ${fare}
+            ${promo ? `<br><strong>🏷 Promo Code:</strong> ${promo}` : ""}
+        `;
+        document.getElementById("summaryBox").innerHTML = html;
+    }
+
+    function formatDate(d) {
+        if (!d) return "";
+        const dt = new Date(d + "T00:00:00");
+        return dt.toLocaleDateString("en-KE", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
+    }
+
+    /* ── Form submit → WhatsApp redirect ── */
+    document.getElementById("bookingForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const firstName = document.getElementById("firstName").value.trim();
+        const lastName  = document.getElementById("lastName").value.trim();
+        const phone     = document.getElementById("custPhone").value.trim();
+        const email     = document.getElementById("custEmail").value.trim();
+
+        if (!firstName) { alert("Please enter your first name."); return; }
+        if (!lastName)  { alert("Please enter your last name."); return; }
+        if (!phone)     { alert("Please enter your phone number."); return; }
+
+        const tripType   = document.getElementById("tripType").value;
+        const cabin      = document.getElementById("cabin").value;
+        const from       = document.getElementById("fromAirport").value.trim();
+        const to         = document.getElementById("toAirport").value.trim();
+        const dep        = document.getElementById("departureDate").value;
+        const ret        = document.getElementById("returnDate").value;
+        const promo      = document.getElementById("promoCode").value.trim();
+        const fare       = document.getElementById("estimatedFare").textContent;
+
+        /* Build the WhatsApp message */
+        let msg = `✈️ *SKYWARD AIRLINES — FLIGHT BOOKING REQUEST*\n\n`;
+        msg += `👤 *Passenger Details*\n`;
+        msg += `• Name: ${firstName} ${lastName}\n`;
+        msg += `• Phone: ${phone}\n`;
+        if (email) msg += `• Email: ${email}\n`;
+        msg += `\n🛫 *Flight Details*\n`;
+        msg += `• Route: ${from} → ${to}\n`;
+        msg += `• Trip Type: ${tripType}\n`;
+        msg += `• Departure: ${formatDate(dep)}\n`;
+        if (tripType === "Return" && ret) msg += `• Return: ${formatDate(ret)}\n`;
+        msg += `• Cabin Class: ${cabin}\n`;
+        msg += `• Passengers: ${passengers}\n`;
+        msg += `• Estimated Fare: ${fare}\n`;
+        if (promo) msg += `• Promo Code: ${promo}\n`;
+        msg += `\n_Sent via Skyward Airlines online booking form._`;
+
+        const encoded = encodeURIComponent(msg);
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
+
+        /* Update step indicator */
+        document.getElementById("step2-indicator").classList.replace("active","done");
+        document.getElementById("step3-indicator").classList.add("active");
+
+        /* Open WhatsApp */
+        window.open(url, "_blank");
+    });
+    </script>
+
+</body>
+</html>
