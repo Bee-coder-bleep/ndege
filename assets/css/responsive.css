@@ -1,0 +1,624 @@
+/*====================================================
+
+RESPONSIVE STYLESHEET
+
+Skyward Airlines
+
+=====================================================*/
+
+/* ===========================
+Large Screens
+=========================== */
+
+@media(max-width:1400px){
+
+.container{
+
+width:94%;
+
+}
+
+.hero-left h1{
+
+font-size:58px;
+
+}
+
+}
+
+/* ===========================
+1200px
+=========================== */
+
+@media(max-width:1200px){
+
+.hero-content{
+
+grid-template-columns:1fr;
+
+gap:60px;
+
+}
+
+.booking-box{
+
+max-width:650px;
+
+margin:auto;
+
+}
+
+.destination-grid{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+.cards{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+.footer-grid{
+
+grid-template-columns:1fr 1fr;
+
+gap:50px;
+
+}
+
+.status-box{
+
+flex-direction:column;
+text-align:center;
+
+}
+
+.status-box div:last-child{
+
+justify-content:center;
+
+}
+
+}
+
+/* ===========================
+992px
+=========================== */
+
+@media(max-width:992px){
+
+.nav{
+
+height:80px;
+
+}
+
+.menu-toggle{
+
+display:flex;
+
+}
+
+nav{
+
+position:fixed;
+top:0;
+right:-300px;
+width:280px;
+max-width:82%;
+height:100vh;
+background:#ffffff;
+box-shadow:-10px 0 40px rgba(0,0,0,.18);
+z-index:999;
+padding:110px 30px 40px;
+overflow-y:auto;
+transition:right .35s ease;
+display:block;
+
+}
+
+nav.active{
+
+right:0;
+
+}
+
+nav ul{
+
+flex-direction:column;
+gap:6px;
+
+}
+
+nav ul li a{
+
+display:block;
+padding:14px 6px;
+font-size:17px;
+border-bottom:1px solid #eef2f7;
+
+}
+
+.logo{
+
+font-size:30px;
+
+}
+
+.hero{
+
+min-height:900px;
+
+}
+
+.hero-left{
+
+text-align:center;
+
+}
+
+.hero-left h1{
+
+font-size:50px;
+
+}
+
+.hero-left p{
+
+margin:auto;
+
+}
+
+.hero-buttons{
+
+display:flex;
+
+justify-content:center;
+
+flex-wrap:wrap;
+
+gap:15px;
+
+}
+
+.booking-box{
+
+width:100%;
+
+}
+
+.cards{
+
+grid-template-columns:1fr;
+
+}
+
+.destination-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.testimonials .cards{
+
+grid-template-columns:1fr;
+
+}
+
+.footer-grid{
+
+grid-template-columns:1fr;
+
+text-align:center;
+
+}
+
+}
+
+/* ===========================
+768px
+=========================== */
+
+@media(max-width:768px){
+
+.topbar{
+
+display:none;
+
+}
+
+.container{
+
+width:92%;
+
+}
+
+.hero{
+
+padding:120px 0;
+
+height:auto;
+
+}
+
+.hero-left h1{
+
+font-size:42px;
+
+line-height:1.2;
+
+}
+
+.hero-left p{
+
+font-size:17px;
+
+}
+
+.title h2{
+
+font-size:34px;
+
+}
+
+.booking-box{
+
+padding:30px;
+
+}
+
+.booking-box h2{
+
+font-size:26px;
+
+}
+
+.status-box{
+
+padding:40px 25px;
+
+}
+
+.status-box h2{
+
+font-size:32px;
+
+}
+
+.status-box div:last-child{
+
+flex-direction:column;
+
+width:100%;
+
+}
+
+.status-box input{
+
+width:100%;
+
+}
+
+.status-box button{
+
+width:100%;
+
+}
+
+.newsletter h2{
+
+font-size:34px;
+
+}
+
+.newsletter input{
+
+width:100%;
+
+}
+
+.newsletter button{
+
+width:100%;
+
+}
+
+.destination img{
+
+height:220px;
+
+}
+
+footer{
+
+padding:70px 0 25px;
+
+}
+
+.responsive-grid-2,
+.form-grid-2,
+.search-grid-3,
+.search-grid-flight,
+.festival-banner{
+
+grid-template-columns:1fr !important;
+
+}
+
+.search-grid-3 button,
+.search-grid-flight button{
+
+width:100%;
+
+}
+
+.festival-banner{
+
+padding:35px 25px;
+text-align:center;
+
+}
+
+.festival-fare-box{
+
+padding:25px;
+
+}
+
+.table-scroll table{
+
+min-width:600px;
+
+}
+
+}
+
+/* ===========================
+576px
+=========================== */
+
+@media(max-width:576px){
+
+.logo{
+
+font-size:24px;
+
+}
+
+.button{
+
+padding:12px 22px;
+
+font-size:14px;
+
+}
+
+.outline{
+
+padding:12px 22px;
+
+margin-left:0;
+
+}
+
+.hero-left h1{
+
+font-size:36px;
+
+}
+
+.subtitle{
+
+letter-spacing:2px;
+
+font-size:12px;
+
+}
+
+.hero-buttons{
+
+flex-direction:column;
+
+align-items:center;
+
+}
+
+.booking-box{
+
+padding:25px;
+
+}
+
+.booking-box input,
+.booking-box select,
+.booking-box button{
+
+height:52px;
+
+font-size:15px;
+
+}
+
+.card{
+
+padding:30px;
+
+}
+
+.card h3{
+
+font-size:22px;
+
+}
+
+.destination h3{
+
+font-size:22px;
+
+}
+
+.title{
+
+margin-bottom:45px;
+
+}
+
+.title h2{
+
+font-size:30px;
+
+}
+
+.newsletter{
+
+padding:80px 0;
+
+}
+
+.newsletter h2{
+
+font-size:30px;
+
+}
+
+.whatsapp{
+
+width:58px;
+
+height:58px;
+
+font-size:28px;
+
+bottom:20px;
+
+right:20px;
+
+}
+
+.scroll-top{
+
+width:50px;
+
+height:50px;
+
+right:20px;
+
+bottom:90px;
+
+}
+
+}
+
+/* ===========================
+400px
+=========================== */
+
+@media(max-width:400px){
+
+.hero-left h1{
+
+font-size:30px;
+
+}
+
+.booking-box{
+
+padding:20px;
+
+}
+
+.status-box{
+
+padding:25px 15px;
+
+}
+
+.status-box h2{
+
+font-size:26px;
+
+}
+
+.newsletter h2{
+
+font-size:26px;
+
+}
+
+.footer-grid{
+
+gap:35px;
+
+}
+
+}
+
+/* ===========================
+Landscape Phones
+=========================== */
+
+@media(max-height:700px){
+
+.hero{
+
+min-height:100vh;
+
+padding:100px 0;
+
+}
+
+}
+
+/* ===========================
+High Resolution Screens
+=========================== */
+
+@media(min-width:1600px){
+
+.container{
+
+max-width:1500px;
+
+}
+
+.hero-left h1{
+
+font-size:78px;
+
+}
+
+.title h2{
+
+font-size:50px;
+
+}
+
+}
+
+/* ===========================
+Print
+=========================== */
+
+@media print{
+
+header,
+footer,
+.button,
+.whatsapp,
+.scroll-top{
+
+display:none;
+
+}
+
+body{
+
+background:white;
+
+color:black;
+
+}
+
+}
